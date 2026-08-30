@@ -2,43 +2,55 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halka Düşüşü</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Hoop Drop Mobile</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
         }
-        body {
-            background-color: #0d0d1a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        body, html {
+            width: 100%;
+            height: 100%;
             overflow: hidden;
+            background-color: #05010d;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-        #game-container {
-            position: relative;
-            box-shadow: 0 0 30px rgba(0, 255, 200, 0.2);
-            border-radius: 12px;
-            overflow: hidden;
+        #canvas-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
         canvas {
+            width: 100%;
+            height: 100%;
             display: block;
-            background: radial-gradient(circle at center, #1b1035 0%, #080314 100%);
         }
-        #ui {
+        #hud {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            color: #fff;
-            font-size: 20px;
-            font-weight: bold;
-            text-shadow: 0 0 8px #00ffff;
+            top: env(safe-area-inset-top, 20px);
+            left: 0;
+            width: 100%;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             pointer-events: none;
+            color: #fff;
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+        }
+        .hud-item {
+            font-size: 20px;
+            letter-spacing: 1px;
         }
         #game-over {
             display: none;
@@ -47,105 +59,160 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(5, 1, 13, 0.9);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: #fff;
+            z-index: 10;
         }
         #game-over h1 {
+            font-size: 38px;
             color: #ff0055;
-            font-size: 40px;
-            margin-bottom: 10px;
-            text-shadow: 0 0 15px #ff0055;
+            text-shadow: 0 0 20px #ff0055;
+            margin-bottom: 15px;
+        }
+        #game-over p {
+            font-size: 22px;
+            margin-bottom: 30px;
+            color: #e0e0e0;
         }
         #restart-btn {
-            margin-top: 20px;
-            padding: 12px 30px;
-            font-size: 18px;
+            padding: 15px 40px;
+            font-size: 20px;
             font-weight: bold;
             color: #000;
-            background: #00ffcc;
+            background: linear-gradient(45deg, #00ffcc, #0099ff);
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
             cursor: pointer;
-            box-shadow: 0 0 15px #00ffcc;
-            transition: transform 0.1s, box-shadow 0.1s;
+            outline: none;
+            touch-action: auto;
         }
-        #restart-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px #00ffcc;
+        #restart-btn:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
 <body>
 
-<div id="game-container">
-    <canvas id="gameCanvas" width="400" height="600"></canvas>
-    <div id="ui">Skor: <span id="score">0</span></div>
-    <div id="game-over">
-        <h1>OYUN BİTTİ</h1>
-        <p>Toplam Skor: <span id="final-score">0</span></p>
-        <button id="restart-btn">Tekrar Oyna</button>
-    </div>
+<div id="canvas-wrapper">
+    <canvas id="gameCanvas"></canvas>
+</div>
+
+<div id="hud">
+    <div class="hud-item">SKOR: <span id="score">0</span></div>
+    <div class="hud-item">HIZ: <span id="speed-level">1.0x</span></div>
+</div>
+
+<div id="game-over">
+    <h1>OYUN BİTTİ</h1>
+    <p>Skor: <span id="final-score">0</span></p>
+    <button id="restart-btn">TEKRAR OYNA</button>
 </div>
 
 <script>
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const scoreEl = document.getElementById("score");
+const speedEl = document.getElementById("speed-level");
 const finalScoreEl = document.getElementById("final-score");
 const gameOverScreen = document.getElementById("game-over");
 const restartBtn = document.getElementById("restart-btn");
 
+let width, height;
 let score = 0;
 let gameOver = false;
 let rings = [];
 let spawnTimer = 0;
 
-// Top Tanımı
+function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    if (ball) {
+        ball.y = height * 0.22;
+    }
+}
+window.addEventListener("resize", resize);
+
+// Top ve Fizik Değerleri
 const ball = {
-    x: canvas.width / 2,
-    y: 120,
-    radius: 12,
-    vx: 0,
-    speed: 7,
-    color: "#00ffff"
+    x: 0,
+    y: 0,
+    radius: 14,
+    vx: 0,              // Anlık yatay hız
+    friction: 0.90,     // Bırakıldığında yumuşak yavaşlama katsayısı
+    maxSpeed: 14,       // Ulaşılabilecek maksimum yatay hız
+    color: "#00f0ff"
 };
 
-// Tuş Kontrolleri
-const keys = {
-    left: false,
-    right: false
-};
+// Dokunmatik Sürükleme (Drag/Swipe) Kontrol Sistemi
+let isDragging = false;
+let lastTouchX = 0;
+const sensitivity = 0.85; // Hassasiyet çarpanı
 
-window.addEventListener("keydown", (e) => {
-    if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
-    if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
-});
+function onTouchStart(e) {
+    if (gameOver) return;
+    isDragging = true;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    lastTouchX = clientX;
+}
 
-window.addEventListener("keyup", (e) => {
-    if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
-    if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
-});
+function onTouchMove(e) {
+    if (!isDragging || gameOver) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const deltaX = clientX - lastTouchX;
+    
+    // Parmağın çekilme mesafesine göre kademeli ivmelenme
+    ball.vx += deltaX * sensitivity * 0.18;
+    
+    // Maksimum hız sınırı
+    if (ball.vx > ball.maxSpeed) ball.vx = ball.maxSpeed;
+    if (ball.vx < -ball.maxSpeed) ball.vx = -ball.maxSpeed;
+    
+    lastTouchX = clientX;
+}
 
-// Fare/Dokunmatik Kontrolü
-canvas.addEventListener("mousemove", (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const targetX = e.clientX - rect.left;
-    ball.x += (targetX - ball.x) * 0.2;
-});
+function onTouchEnd() {
+    isDragging = false;
+}
+
+// Mobil Dokunmatik Olayları
+window.addEventListener("touchstart", onTouchStart, { passive: false });
+window.addEventListener("touchmove", onTouchMove, { passive: false });
+window.addEventListener("touchend", onTouchEnd);
+window.addEventListener("touchcancel", onTouchEnd);
+
+// Masaüstü Testi İçin Fare Olayları
+window.addEventListener("mousedown", onTouchStart);
+window.addEventListener("mousemove", onTouchMove);
+window.addEventListener("mouseup", onTouchEnd);
+
+// Dinamik Zorluk Hesaplama
+function getGameParams() {
+    const baseSpeed = 4.0;
+    const currentSpeed = baseSpeed + (score * 0.18); 
+    const gapSize = Math.max(width * 0.22, (width * 0.38) - (score * 1.5)); 
+    const spawnInterval = Math.max(30, 65 - Math.floor(score * 0.8));
+
+    return { currentSpeed, gapSize, spawnInterval };
+}
 
 // Halka Sınıfı
 class Ring {
-    constructor() {
-        this.y = canvas.height + 40;
-        this.thickness = 18;
-        this.speed = 2.5 + score * 0.05; // Skor arttıkça hızlanır
-        this.gapSize = 75;
-        this.gapX = Math.random() * (canvas.width - this.gapSize - 40) + 20;
+    constructor(speed, gapSize) {
+        this.y = height + 30;
+        this.thickness = 22;
+        this.speed = speed;
+        this.gapSize = gapSize;
+        this.gapX = Math.random() * (width - this.gapSize - 40) + 20;
         this.passed = false;
-        this.color = `hsl(${Math.random() * 360}, 90%, 60%)`;
+        this.color = `hsl(${(score * 12 + Math.random() * 40) % 360}, 90%, 55%)`;
     }
 
     update() {
@@ -156,23 +223,23 @@ class Ring {
         ctx.save();
         ctx.fillStyle = this.color;
         ctx.shadowColor = this.color;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 15;
 
-        // Sol Parça
+        // Sol Çubuk
         ctx.fillRect(0, this.y, this.gapX, this.thickness);
-        // Sağ Parça
+        // Sağ Çubuk
         ctx.fillRect(
             this.gapX + this.gapSize,
             this.y,
-            canvas.width - (this.gapX + this.gapSize),
+            width - (this.gapX + this.gapSize),
             this.thickness
         );
 
-        // Boşluk kenarlarına parlayan noktalar (Halka hissi için)
+        // Boşluk kenar neon halkaları
         ctx.fillStyle = "#fff";
         ctx.beginPath();
-        ctx.arc(this.gapX, this.y + this.thickness / 2, 4, 0, Math.PI * 2);
-        ctx.arc(this.gapX + this.gapSize, this.y + this.thickness / 2, 4, 0, Math.PI * 2);
+        ctx.arc(this.gapX, this.y + this.thickness / 2, 5, 0, Math.PI * 2);
+        ctx.arc(this.gapX + this.gapSize, this.y + this.thickness / 2, 5, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.restore();
@@ -180,11 +247,16 @@ class Ring {
 }
 
 function init() {
+    resize();
     score = 0;
     gameOver = false;
     rings = [];
-    ball.x = canvas.width / 2;
+    spawnTimer = 0;
+    ball.x = width / 2;
+    ball.y = height * 0.22;
+    ball.vx = 0;
     scoreEl.innerText = score;
+    speedEl.innerText = "1.0x";
     gameOverScreen.style.display = "none";
     loop();
 }
@@ -192,35 +264,45 @@ function init() {
 function loop() {
     if (gameOver) return;
 
-    // Temizle
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, width, height);
 
-    // Top Hareketi
-    if (keys.left) ball.x -= ball.speed;
-    if (keys.right) ball.x += ball.speed;
+    // Top Fizik Güncellemesi (İvme, Sürtünme ve Konum)
+    ball.x += ball.vx;
+    ball.vx *= ball.friction; // Doğal durma/yumuşama
 
-    // Sınırlar
-    if (ball.x - ball.radius < 0) ball.x = ball.radius;
-    if (ball.x + ball.radius > canvas.width) ball.x = canvas.width - ball.radius;
+    // Çok küçük hızlarda titremeyi kes
+    if (Math.abs(ball.vx) < 0.01) ball.vx = 0;
+
+    // Ekran Kenar Çarpışması (Sekme ve Sınır Koruması)
+    if (ball.x - ball.radius < 0) {
+        ball.x = ball.radius;
+        ball.vx = 0;
+    } else if (ball.x + ball.radius > width) {
+        ball.x = width - ball.radius;
+        ball.vx = 0;
+    }
+
+    const { currentSpeed, gapSize, spawnInterval } = getGameParams();
+    speedEl.innerText = (currentSpeed / 4.0).toFixed(1) + "x";
 
     // Halka Üretimi
     spawnTimer++;
-    if (spawnTimer > 70 - Math.min(score, 30)) {
-        rings.push(new Ring());
+    if (spawnTimer >= spawnInterval) {
+        rings.push(new Ring(currentSpeed, gapSize));
         spawnTimer = 0;
     }
 
-    // Halkaları Güncelle ve Çiz
+    // Halkaların Hareketi ve Çarpışma Testi
     for (let i = rings.length - 1; i >= 0; i--) {
         const r = rings[i];
         r.update();
         r.draw();
 
-        // Çarpışma Kontrolü (Top halka hizasına girdiğinde)
-        const isBallInRingY = ball.y + ball.radius > r.y && ball.y - ball.radius < r.y + r.thickness;
-        
-        if (isBallInRingY) {
-            // Boşluktan geçip geçmediğini kontrol et
+        // Top ile çakışma kontrolü
+        const inVerticalRange = (ball.y + ball.radius > r.y) && 
+                               (ball.y - ball.radius < r.y + r.thickness);
+
+        if (inVerticalRange) {
             const isInsideGap = (ball.x - ball.radius > r.gapX) && 
                                (ball.x + ball.radius < r.gapX + r.gapSize);
 
@@ -230,26 +312,32 @@ function loop() {
             }
         }
 
-        // Başarılı Geçiş ve Skor
+        // Başarılı Geçiş
         if (!r.passed && ball.y > r.y + r.thickness) {
             r.passed = true;
             score++;
             scoreEl.innerText = score;
         }
 
-        // Ekrandan çıkan halkaları sil
+        // Ekran dışına çıkanları temizle
         if (r.y < -50) {
             rings.splice(i, 1);
         }
     }
 
-    // Topu Çiz
+    // Top Çizimi (Neon Efektli)
     ctx.save();
     ctx.fillStyle = ball.color;
     ctx.shadowColor = ball.color;
     ctx.shadowBlur = 20;
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Top parıltı merkezi
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(ball.x - 3, ball.y - 3, ball.radius * 0.35, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
@@ -263,6 +351,8 @@ function endGame() {
 }
 
 restartBtn.addEventListener("click", init);
+restartBtn.addEventListener("touchstart", (e) => { e.stopPropagation(); init(); });
+
 init();
 </script>
 </body>
