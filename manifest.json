@@ -1,14 +1,12 @@
 {
-  "background_color": "#ffffff",
+  "background_color": "#000000",
   "dir": "ltr",
   "display": "standalone",
   "name": "neonring",
-  "orientation": "portrait",
+  "orientation": "any",
   "scope": "/",
   "short_name": "neonring",
   "start_url": "/",
-  "theme_color": "#ffffff",
-  "id": "neonring",
-  "description": "An immersive and fast- paced arcade game where you test your reflexes.",
-  "lang": "en"
+  "theme_color": "#000000",
+  "description": "An exciting skill game where you try to get the highest score by passing through neon rings."
 }
