@@ -1,1 +1,270 @@
-<meta http-equiv="refresh" content="0; url=oyun.html">
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <link rel="manifest" href="manifest.json">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halka Düşüşü</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            background-color: #0d0d1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+        #game-container {
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background: radial-gradient(circle at center, #1b1035 0%, #080314 100%);
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 0 8px #00ffff;
+            pointer-events: none;
+        }
+        #game-over {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+        #game-over h1 {
+            color: #ff0055;
+            font-size: 40px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px #ff0055;
+        }
+        #restart-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+            background: #00ffcc;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #00ffcc;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        #restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px #00ffcc;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <div id="ui">Skor: <span id="score">0</span></div>
+    <div id="game-over">
+        <h1>OYUN BİTTİ</h1>
+        <p>Toplam Skor: <span id="final-score">0</span></p>
+        <button id="restart-btn">Tekrar Oyna</button>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const scoreEl = document.getElementById("score");
+const finalScoreEl = document.getElementById("final-score");
+const gameOverScreen = document.getElementById("game-over");
+const restartBtn = document.getElementById("restart-btn");
+
+let score = 0;
+let gameOver = false;
+let rings = [];
+let spawnTimer = 0;
+
+// Top Tanımı
+const ball = {
+    x: canvas.width / 2,
+    y: 120,
+    radius: 12,
+    vx: 0,
+    speed: 7,
+    color: "#00ffff"
+};
+
+// Tuş Kontrolleri
+const keys = {
+    left: false,
+    right: false
+};
+
+window.addEventListener("keydown", (e) => {
+    if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
+    if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
+});
+
+window.addEventListener("keyup", (e) => {
+    if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
+    if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
+});
+
+// Fare/Dokunmatik Kontrolü
+canvas.addEventListener("mousemove", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const targetX = e.clientX - rect.left;
+    ball.x += (targetX - ball.x) * 0.2;
+});
+
+// Halka Sınıfı
+class Ring {
+    constructor() {
+        this.y = canvas.height + 40;
+        this.thickness = 18;
+        this.speed = 2.5 + score * 0.05; // Skor arttıkça hızlanır
+        this.gapSize = 75;
+        this.gapX = Math.random() * (canvas.width - this.gapSize - 40) + 20;
+        this.passed = false;
+        this.color = `hsl(${Math.random() * 360}, 90%, 60%)`;
+    }
+
+    update() {
+        this.y -= this.speed;
+    }
+
+    draw() {
+        ctx.save();
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 12;
+
+        // Sol Parça
+        ctx.fillRect(0, this.y, this.gapX, this.thickness);
+        // Sağ Parça
+        ctx.fillRect(
+            this.gapX + this.gapSize,
+            this.y,
+            canvas.width - (this.gapX + this.gapSize),
+            this.thickness
+        );
+
+        // Boşluk kenarlarına parlayan noktalar (Halka hissi için)
+        ctx.fillStyle = "#fff";
+        ctx.beginPath();
+        ctx.arc(this.gapX, this.y + this.thickness / 2, 4, 0, Math.PI * 2);
+        ctx.arc(this.gapX + this.gapSize, this.y + this.thickness / 2, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+    }
+}
+
+function init() {
+    score = 0;
+    gameOver = false;
+    rings = [];
+    ball.x = canvas.width / 2;
+    scoreEl.innerText = score;
+    gameOverScreen.style.display = "none";
+    loop();
+}
+
+function loop() {
+    if (gameOver) return;
+
+    // Temizle
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Top Hareketi
+    if (keys.left) ball.x -= ball.speed;
+    if (keys.right) ball.x += ball.speed;
+
+    // Sınırlar
+    if (ball.x - ball.radius < 0) ball.x = ball.radius;
+    if (ball.x + ball.radius > canvas.width) ball.x = canvas.width - ball.radius;
+
+    // Halka Üretimi
+    spawnTimer++;
+    if (spawnTimer > 70 - Math.min(score, 30)) {
+        rings.push(new Ring());
+        spawnTimer = 0;
+    }
+
+    // Halkaları Güncelle ve Çiz
+    for (let i = rings.length - 1; i >= 0; i--) {
+        const r = rings[i];
+        r.update();
+        r.draw();
+
+        // Çarpışma Kontrolü (Top halka hizasına girdiğinde)
+        const isBallInRingY = ball.y + ball.radius > r.y && ball.y - ball.radius < r.y + r.thickness;
+        
+        if (isBallInRingY) {
+            // Boşluktan geçip geçmediğini kontrol et
+            const isInsideGap = (ball.x - ball.radius > r.gapX) && 
+                               (ball.x + ball.radius < r.gapX + r.gapSize);
+
+            if (!isInsideGap) {
+                endGame();
+                return;
+            }
+        }
+
+        // Başarılı Geçiş ve Skor
+        if (!r.passed && ball.y > r.y + r.thickness) {
+            r.passed = true;
+            score++;
+            scoreEl.innerText = score;
+        }
+
+        // Ekrandan çıkan halkaları sil
+        if (r.y < -50) {
+            rings.splice(i, 1);
+        }
+    }
+
+    // Topu Çiz
+    ctx.save();
+    ctx.fillStyle = ball.color;
+    ctx.shadowColor = ball.color;
+    ctx.shadowBlur = 20;
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    requestAnimationFrame(loop);
+}
+
+function endGame() {
+    gameOver = true;
+    finalScoreEl.innerText = score;
+    gameOverScreen.style.display = "flex";
+}
+
+restartBtn.addEventListener("click", init);
+init();
+</script>
+</body>
+</html>
