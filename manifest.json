@@ -1,0 +1,14 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "neonring",
+  "orientation": "portrait",
+  "scope": "/",
+  "short_name": "neonring",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "id": "neonring",
+  "description": "An immersive and fast- paced arcade game where you test your reflexes.",
+  "lang": "en"
+}
