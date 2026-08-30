@@ -1,0 +1,24 @@
+{
+    "background_color": "#000000",
+    "dir": "ltr",
+    "display": "standalone",
+    "name": "neonring",
+    "orientation": "any",
+    "scope": "/",
+    "short_name": "neonring",
+    "start_url": "/",
+    "theme_color": "#000000",
+    "description": "An exciting skill game where you try to get the highest score by passing through neon rings.",
+    "icons": [
+        {
+            "src": "icon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
