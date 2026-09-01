@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Hoop Drop: Cyber Edition</title>
+    <title>Sferis: Halka Yolculuğu</title>
     <style>
         :root {
             --bg-dark: #070913;
-            --primary: #00f0ff;
-            --primary-glow: rgba(0, 240, 255, 0.4);
-            --secondary: #ff0055;
-            --secondary-glow: rgba(255, 0, 85, 0.4);
-            --accent: #ffe600;
-            --accent-glow: rgba(255, 230, 0, 0.4);
-            --card-bg: rgba(18, 24, 46, 0.75);
-            --card-border: rgba(255, 255, 255, 0.12);
+            --primary: #00e5ff;
+            --primary-glow: rgba(0, 229, 255, 0.3);
+            --secondary: #ff3366;
+            --accent: #ffb703;
+            --card-bg: rgba(14, 20, 36, 0.82);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f0f4fc;
+            --text-dim: #7988a3;
         }
 
         * {
@@ -26,7 +24,7 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: none;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body, html {
@@ -34,7 +32,7 @@
             height: 100%;
             overflow: hidden;
             background-color: var(--bg-dark);
-            color: #ffffff;
+            color: var(--text-main);
         }
 
         #game-container {
@@ -54,7 +52,7 @@
             z-index: 1;
         }
 
-        /* ━━━━━━━━ UI KATMANLARI ━━━━━━━━ */
+        /* ━━━━━━━━ EKRAN YÖNETİMİ ━━━━━━━━ */
         .screen {
             position: absolute;
             top: 0;
@@ -65,11 +63,11 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: calc(env(safe-area-inset-top, 20px) + 15px) 24px calc(env(safe-area-inset-bottom, 20px) + 20px);
+            padding: calc(env(safe-area-inset-top, 20px) + 12px) 20px calc(env(safe-area-inset-bottom, 20px) + 16px);
             opacity: 0;
             pointer-events: none;
-            transform: scale(0.96);
-            transition: opacity 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: scale(0.97);
+            transition: opacity 0.25s ease, transform 0.25s ease;
         }
 
         .screen.active {
@@ -78,14 +76,13 @@
             transform: scale(1);
         }
 
-        /* ━━━━━━━━ ORTAK BİLEŞENLER ━━━━━━━━ */
         .glass-panel {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 20px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 18px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
         }
 
         .header-bar {
@@ -99,27 +96,22 @@
         .currency-badge {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: rgba(0, 0, 0, 0.4);
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 20px;
-            border: 1px solid var(--accent-glow);
+            border: 1px solid rgba(255, 183, 3, 0.3);
             font-weight: 800;
             color: var(--accent);
-            font-size: 15px;
-            letter-spacing: 0.5px;
-        }
-
-        .currency-badge span {
-            color: #fff;
+            font-size: 14px;
         }
 
         .icon-btn {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -127,121 +119,127 @@
             font-size: 18px;
             cursor: pointer;
             outline: none;
-            transition: transform 0.15s, background 0.15s;
         }
 
         .icon-btn:active {
-            transform: scale(0.9);
-            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.92);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #00f0ff 0%, #0077ff 100%);
-            color: #050b1a;
+            background: linear-gradient(135deg, #00e5ff 0%, #0077ff 100%);
+            color: #030814;
             border: none;
-            border-radius: 24px;
-            padding: 16px 36px;
-            font-size: 18px;
+            border-radius: 20px;
+            padding: 15px 24px;
+            font-size: 16px;
             font-weight: 800;
-            letter-spacing: 1px;
-            box-shadow: 0 8px 25px var(--primary-glow);
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 20px var(--primary-glow);
             cursor: pointer;
             outline: none;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            transition: transform 0.15s, box-shadow 0.15s;
+            gap: 8px;
             text-transform: uppercase;
         }
 
         .btn-primary:active {
             transform: scale(0.96);
-            box-shadow: 0 4px 12px var(--primary-glow);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             color: #fff;
             border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 14px 28px;
-            font-size: 16px;
+            border-radius: 16px;
+            padding: 12px 20px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            transition: background 0.15s, transform 0.15s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
         }
 
         .btn-secondary:active {
             transform: scale(0.96);
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
         }
 
-        /* ━━━━━━━━ 1. ANA MENÜ ━━━━━━━━ */
-        #main-menu .brand-box {
+        /* ━━━━━━━━ ANA MENÜ ━━━━━━━━ */
+        .brand-box {
             text-align: center;
-            margin-top: 15vh;
+            margin-top: 8vh;
         }
 
-        #main-menu .brand-title {
-            font-size: 44px;
+        .brand-title {
+            font-size: 38px;
             font-weight: 900;
-            letter-spacing: 3px;
-            background: linear-gradient(180deg, #ffffff 20%, #00f0ff 100%);
+            letter-spacing: 4px;
+            background: linear-gradient(180deg, #ffffff 30%, var(--primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px var(--primary-glow);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
-        #main-menu .brand-sub {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #7b8ba5;
-            font-weight: 700;
-        }
-
-        .menu-stats-card {
-            display: flex;
-            justify-content: space-around;
-            padding: 16px;
-            margin-bottom: 24px;
-        }
-
-        .stat-node {
-            text-align: center;
-        }
-
-        .stat-node .lbl {
+        .brand-sub {
             font-size: 11px;
-            color: #7b8ba5;
             text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-dim);
             font-weight: 700;
-            letter-spacing: 1px;
         }
 
-        .stat-node .val {
-            font-size: 20px;
+        .mode-selection-card {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .mode-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .mode-card {
+            padding: 14px 10px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-card:active {
+            transform: scale(0.95);
+            background: rgba(0, 229, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .mode-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .mode-title {
+            font-size: 13px;
             font-weight: 800;
-            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .mode-desc {
+            font-size: 10px;
+            color: var(--text-dim);
             margin-top: 2px;
         }
 
-        .menu-action-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        .menu-sub-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        /* ━━━━━━━━ OYUN HUD ━━━━━━━━ */
+        /* ━━━━━━━━ HUD & ÜST COMBO ━━━━━━━━ */
         #hud-layer {
             position: absolute;
             top: 0;
@@ -251,7 +249,7 @@
             z-index: 5;
             pointer-events: none;
             display: none;
-            padding: calc(env(safe-area-inset-top, 20px) + 12px) 20px;
+            padding: calc(env(safe-area-inset-top, 20px) + 8px) 16px;
         }
 
         .hud-content {
@@ -261,244 +259,269 @@
             width: 100%;
         }
 
-        .hud-stat-box {
-            background: rgba(7, 9, 19, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 16px;
-            border-radius: 14px;
-            backdrop-filter: blur(10px);
+        .hud-box {
+            background: rgba(7, 9, 19, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 12px;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
         }
 
-        .hud-label {
-            font-size: 10px;
-            color: #8c9bb5;
+        .hud-lbl {
+            font-size: 9px;
+            color: var(--text-dim);
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
-        .hud-value {
-            font-size: 22px;
+        .hud-val {
+            font-size: 18px;
             font-weight: 900;
             color: #fff;
         }
 
-        .hud-center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .hearts-box {
-            display: flex;
-            gap: 4px;
-            font-size: 16px;
-        }
-
         .level-progress-bar {
-            width: 120px;
-            height: 6px;
+            width: 100px;
+            height: 4px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
+            border-radius: 2px;
             overflow: hidden;
+            margin: 4px 0;
         }
 
         .level-progress-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #00f0ff, #ffe600);
-            transition: width 0.2s ease-out;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.15s ease-out;
         }
 
-        .combo-alert {
+        .hud-combo-tag {
             position: absolute;
-            top: 25%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            font-size: 28px;
+            top: calc(env(safe-area-inset-top, 20px) + 55px);
+            right: 16px;
+            font-size: 12px;
             font-weight: 900;
             color: var(--accent);
-            text-shadow: 0 0 20px var(--accent-glow);
-            pointer-events: none;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-align: center;
+            background: rgba(255, 183, 3, 0.15);
+            border: 1px solid rgba(255, 183, 3, 0.3);
+            padding: 3px 8px;
+            border-radius: 8px;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: opacity 0.2s, transform 0.2s;
         }
 
-        .combo-alert.active {
-            transform: translate(-50%, -50%) scale(1);
+        .hud-combo-tag.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* ━━━━━━━━ MODAL PANELLER (Mağaza, Görevler, Ayarlar, Oyun Bitti vb.) ━━━━━━━━ */
-        .modal-body {
-            flex: 1;
-            overflow-y: auto;
-            margin: 20px 0;
-            padding-right: 4px;
-        }
-
-        .modal-body::-webkit-scrollbar {
-            display: none;
-        }
-
-        .modal-title {
-            font-size: 24px;
+        .theme-banner {
+            position: absolute;
+            top: calc(env(safe-area-inset-top, 20px) + 60px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(7, 9, 19, 0.85);
+            border: 1px solid var(--primary);
+            padding: 6px 18px;
+            border-radius: 16px;
+            font-size: 12px;
             font-weight: 800;
-            text-align: center;
+            color: var(--primary);
             letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Skin Kartları */
-        .skin-grid {
+        .theme-banner.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ━━━━━━━━ LEVEL SEÇİM EKRANI ━━━━━━━━ */
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        .level-node {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .level-node.completed {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(0, 229, 255, 0.05);
+        }
+
+        .level-node.locked {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .level-node.current {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(255, 183, 3, 0.3);
+            color: var(--accent);
+        }
+
+        /* ━━━━━━━━ MAĞAZA ━━━━━━━━ */
+        .shop-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 8px 0 14px 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .shop-tabs::-webkit-scrollbar { display: none; }
+
+        .shop-tab {
+            padding: 6px 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+
+        .shop-tab.active {
+            background: var(--primary);
+            color: #030814;
+        }
+
+        .shop-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
+            gap: 12px;
+            margin-top: 14px;
         }
 
-        .skin-card {
-            padding: 16px;
+        .shop-card {
+            padding: 14px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 10px;
+            gap: 8px;
             cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.2s;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
         }
 
-        .skin-card.selected {
+        .shop-card.selected {
             border-color: var(--primary);
-            box-shadow: 0 0 20px var(--primary-glow);
+            box-shadow: 0 0 15px var(--primary-glow);
         }
 
-        .skin-preview-circle {
-            width: 50px;
-            height: 50px;
+        .shop-preview {
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            box-shadow: 0 0 15px currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
         }
 
-        .skin-name {
+        .shop-item-name {
+            font-size: 13px;
             font-weight: 700;
-            font-size: 14px;
         }
 
-        .skin-status {
-            font-size: 12px;
+        .shop-item-status {
+            font-size: 11px;
             font-weight: 800;
-            padding: 4px 10px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.08);
+            padding: 3px 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
         }
 
-        /* Görev Kartları */
-        .task-list {
+        /* ━━━━━━━━ AYARLAR VE GÖREVLER ━━━━━━━━ */
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            margin: 16px 0;
+            padding-right: 2px;
+        }
+
+        .modal-body::-webkit-scrollbar { display: none; }
+
+        .list-stack {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .task-card {
+        .list-row {
             padding: 14px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .task-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .task-desc {
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .task-progress-text {
-            font-size: 11px;
-            color: #7b8ba5;
-        }
-
-        /* Ayar Satırları */
-        .settings-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .setting-row {
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .setting-label {
-            font-weight: 700;
-            font-size: 15px;
-        }
-
         .toggle-switch {
-            width: 50px;
-            height: 28px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 14px;
+            width: 46px;
+            height: 26px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 13px;
             position: relative;
             cursor: pointer;
             transition: background 0.2s;
         }
 
-        .toggle-switch.on {
-            background: var(--primary);
-        }
-
+        .toggle-switch.on { background: var(--primary); }
         .toggle-knob {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             background: #fff;
             border-radius: 50%;
             position: absolute;
             top: 3px;
             left: 3px;
-            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: transform 0.2s;
         }
+        .toggle-switch.on .toggle-knob { transform: translateX(20px); }
 
-        .toggle-switch.on .toggle-knob {
-            transform: translateX(22px);
-        }
-
-        /* Sonuç Ekranları */
+        /* ━━━━━━━━ SONUÇ PANELLERİ ━━━━━━━━ */
         .result-card {
-            padding: 30px 20px;
+            padding: 24px 18px;
             text-align: center;
             margin: auto 0;
         }
 
         .result-title {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 900;
-            letter-spacing: 2px;
-            margin-bottom: 6px;
-        }
-
-        .result-badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 800;
-            margin-bottom: 20px;
             letter-spacing: 1px;
+            margin-bottom: 4px;
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin: 18px 0;
         }
     </style>
 </head>
@@ -507,26 +530,27 @@
 <div id="game-container">
     <canvas id="gameCanvas"></canvas>
 
-    <!-- OYUN İÇİ HUD -->
+    <!-- OYUN HUD -->
     <div id="hud-layer">
         <div class="hud-content">
-            <div class="hud-stat-box">
-                <div class="hud-label">SKOR</div>
-                <div class="hud-value" id="hud-score">0</div>
+            <div class="hud-box">
+                <div class="hud-lbl">SKOR</div>
+                <div class="hud-val" id="hud-score">0</div>
             </div>
-            <div class="hud-center">
-                <div class="hud-label" id="hud-level-title">LEVEL 1</div>
-                <div class="level-progress-bar">
+            <div class="hud-box" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="hud-lbl" id="hud-mode-title">LEVEL 1</div>
+                <div class="level-progress-bar" id="hud-progress-wrap">
                     <div class="level-progress-fill" id="hud-progress"></div>
                 </div>
-                <div class="hearts-box" id="hud-hearts">❤️❤️❤️</div>
+                <div style="font-size: 12px; margin-top: 2px;" id="hud-hearts">❤️❤️❤️</div>
             </div>
-            <div class="hud-stat-box" style="text-align: right;">
-                <div class="hud-label">COIN</div>
-                <div class="hud-value" id="hud-coins" style="color: var(--accent);">0</div>
+            <div class="hud-box" style="text-align: right;">
+                <div class="hud-lbl">COIN</div>
+                <div class="hud-val" id="hud-coins" style="color: var(--accent);">0</div>
             </div>
         </div>
-        <div class="combo-alert" id="combo-popup">COMBO x2!</div>
+        <div class="hud-combo-tag" id="hud-combo">COMBO x2</div>
+        <div class="theme-banner" id="theme-banner">YENİ BÖLGE: DERİN UZAY</div>
     </div>
 
     <!-- 1. ANA MENÜ -->
@@ -537,223 +561,244 @@
         </div>
 
         <div class="brand-box">
-            <h1 class="brand-title">HOOP DROP</h1>
-            <div class="brand-sub">CYBERPASS EDITION</div>
+            <h1 class="brand-title">SFERIS</h1>
+            <div class="brand-sub">Halka Yolculuğu</div>
         </div>
 
         <div>
-            <div class="glass-panel menu-stats-card">
-                <div class="stat-node">
-                    <div class="lbl">MEVCUT SEVİYE</div>
-                    <div class="val" id="menu-level">Level 1</div>
-                </div>
-                <div style="width: 1px; background: var(--card-border);"></div>
-                <div class="stat-node">
-                    <div class="lbl">EN YÜKSEK SKOR</div>
-                    <div class="val" id="menu-high-score">0</div>
+            <div class="glass-panel mode-selection-card">
+                <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">OYUN MODU SEÇİN</div>
+                <div class="mode-row">
+                    <div class="mode-card" onclick="UI.showScreen('level-select-menu')">
+                        <div class="mode-icon">🏆</div>
+                        <div class="mode-title">LEVELLİ</div>
+                        <div class="mode-desc">Bölüm Hedefleri</div>
+                    </div>
+                    <div class="mode-card" onclick="Game.startEndless()">
+                        <div class="mode-icon">♾️</div>
+                        <div class="mode-title">SERBEST</div>
+                        <div class="mode-desc">Sonsuz Skor</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="menu-action-stack">
-                <button class="btn-primary" onclick="Game.startLevel(Storage.data.currentLevel)">
-                    OYNA 🚀
-                </button>
-                <div class="menu-sub-row">
-                    <button class="btn-secondary" onclick="UI.showScreen('shop-menu')">🛍️ Mağaza</button>
-                    <button class="btn-secondary" onclick="UI.showScreen('tasks-menu')">📋 Görevler</button>
-                </div>
+            <div class="glass-panel list-row" style="margin-bottom: 12px; padding: 10px 16px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-dim);">Serbest Rekor: <span id="menu-endless-high" style="color:#fff; font-weight: 900;">0</span></div>
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-dim);">Son Bölüm: <span id="menu-level-indicator" style="color:var(--primary); font-weight: 900;">1</span></div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="btn-secondary" onclick="UI.showScreen('shop-menu')">🛍️ Market</button>
+                <button class="btn-secondary" onclick="UI.showScreen('tasks-menu')">📋 Görevler</button>
             </div>
         </div>
     </div>
 
-    <!-- 2. MAĞAZA MENÜSÜ -->
+    <!-- 2. LEVEL SEÇİM EKRANI -->
+    <div id="level-select-menu" class="screen">
+        <div class="header-bar">
+            <button class="icon-btn" onclick="UI.showScreen('main-menu')">‹</button>
+            <div style="font-size: 16px; font-weight: 800;">BÖLÜM SEÇİMİ</div>
+            <div style="width: 42px;"></div>
+        </div>
+        <div class="modal-body">
+            <div class="level-grid" id="level-grid-container"></div>
+        </div>
+    </div>
+
+    <!-- 3. GENİŞLETİLMİŞ MAĞAZA -->
     <div id="shop-menu" class="screen">
         <div class="header-bar">
             <button class="icon-btn" onclick="UI.showScreen('main-menu')">‹</button>
-            <div class="modal-title">TOP MAĞAZASI</div>
+            <div style="font-size: 16px; font-weight: 800;">KOZMETİK MAĞAZASI</div>
             <div class="currency-badge">🪙 <span id="shop-coins">0</span></div>
         </div>
+        <div class="shop-tabs">
+            <div class="shop-tab active" onclick="Shop.setTab('balls', this)">Toplar</div>
+            <div class="shop-tab" onclick="Shop.setTab('trails', this)">İzler</div>
+            <div class="shop-tab" onclick="Shop.setTab('themes', this)">Temalar</div>
+            <div class="shop-tab" onclick="Shop.setTab('badges', this)">Rozetler</div>
+        </div>
         <div class="modal-body">
-            <div class="skin-grid" id="skin-container"></div>
+            <div class="shop-grid" id="shop-grid-container"></div>
         </div>
     </div>
 
-    <!-- 3. GÜNLÜK GÖREVLER -->
+    <!-- 4. GÜNLÜK GÖREVLER -->
     <div id="tasks-menu" class="screen">
         <div class="header-bar">
             <button class="icon-btn" onclick="UI.showScreen('main-menu')">‹</button>
-            <div class="modal-title">GÜNLÜK GÖREVLER</div>
-            <div style="width: 44px;"></div>
+            <div style="font-size: 16px; font-weight: 800;">GÜNLÜK GÖREVLER</div>
+            <div style="width: 42px;"></div>
         </div>
         <div class="modal-body">
-            <div class="task-list" id="task-container"></div>
+            <div class="list-stack" id="task-container"></div>
         </div>
     </div>
 
-    <!-- 4. AYARLAR MENÜSÜ -->
+    <!-- 5. AYARLAR -->
     <div id="settings-menu" class="screen">
         <div class="header-bar">
             <button class="icon-btn" onclick="UI.showScreen('main-menu')">‹</button>
-            <div class="modal-title">AYARLAR</div>
-            <div style="width: 44px;"></div>
+            <div style="font-size: 16px; font-weight: 800;">AYARLAR</div>
+            <div style="width: 42px;"></div>
         </div>
         <div class="modal-body">
-            <div class="settings-list">
-                <div class="glass-panel setting-row">
-                    <div class="setting-label">🔊 Ses Efektleri (SFX)</div>
+            <div class="list-stack">
+                <div class="glass-panel list-row">
+                    <div style="font-size: 14px; font-weight: 700;">🔊 Sakin Ses Efektleri</div>
                     <div class="toggle-switch" id="toggle-sfx" onclick="Settings.toggle('sfx')"><div class="toggle-knob"></div></div>
                 </div>
-                <div class="glass-panel setting-row">
-                    <div class="setting-label">🎵 Arka Plan Müziği</div>
+                <div class="glass-panel list-row">
+                    <div style="font-size: 14px; font-weight: 700;">🎵 Ortam Ambiyansı</div>
                     <div class="toggle-switch" id="toggle-bgm" onclick="Settings.toggle('bgm')"><div class="toggle-knob"></div></div>
                 </div>
-                <div class="glass-panel setting-row">
-                    <div class="setting-label">📳 Titreşim (Haptic)</div>
+                <div class="glass-panel list-row">
+                    <div style="font-size: 14px; font-weight: 700;">📳 Titreşim Geri Bildirimi</div>
                     <div class="toggle-switch" id="toggle-vibrate" onclick="Settings.toggle('vibration')"><div class="toggle-knob"></div></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 5. LEVEL TAMAMLANDI EKRANI -->
+    <!-- 6. LEVEL TAMAMLANDI -->
     <div id="victory-screen" class="screen">
-        <div style="height: 44px;"></div>
+        <div></div>
         <div class="glass-panel result-card">
-            <div class="result-title" style="color: var(--accent);">SEVİYE TAMAM!</div>
-            <div class="result-badge" style="background: rgba(255, 230, 0, 0.15); color: var(--accent);">TEBRİKLER ŞAMPİYON</div>
+            <div class="result-title" style="color: var(--accent);">BÖLÜM TAMAM!</div>
+            <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px;">Harika odaklanma.</div>
             <div class="stats-grid">
-                <div class="glass-panel" style="padding: 12px;">
-                    <div class="hud-label">SKOR</div>
-                    <div class="hud-value" id="vic-score">0</div>
+                <div class="glass-panel" style="padding: 10px;">
+                    <div class="hud-lbl">GEÇİLEN DELİK</div>
+                    <div class="hud-val" id="vic-score">0</div>
                 </div>
-                <div class="glass-panel" style="padding: 12px;">
-                    <div class="hud-label">ÖDÜL</div>
-                    <div class="hud-value" style="color: var(--accent);">+<span id="vic-coins">0</span> 🪙</div>
+                <div class="glass-panel" style="padding: 10px;">
+                    <div class="hud-lbl">KAZANILAN</div>
+                    <div class="hud-val" style="color: var(--accent);">+<span id="vic-coins">0</span> 🪙</div>
                 </div>
             </div>
-            <button class="btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="Game.nextLevel()">SONRAKİ LEVEL ❯</button>
-            <button class="btn-secondary" style="width: 100%;" onclick="UI.showScreen('main-menu')">ANA MENÜ</button>
+            <button class="btn-primary" style="width: 100%; margin-bottom: 8px;" onclick="Game.nextLevel()">SONRAKİ BÖLÜM ❯</button>
+            <button class="btn-secondary" style="width: 100%;" onclick="UI.showScreen('level-select-menu')">BÖLÜMLER</button>
         </div>
-        <div style="height: 44px;"></div>
+        <div></div>
     </div>
 
-    <!-- 6. GAME OVER EKRANI -->
+    <!-- 7. GAME OVER -->
     <div id="gameover-screen" class="screen">
-        <div style="height: 44px;"></div>
+        <div></div>
         <div class="glass-panel result-card">
-            <div class="result-title" style="color: var(--secondary);">ELENDİN!</div>
-            <div class="result-badge" id="gov-record-tag" style="background: rgba(255, 0, 85, 0.15); color: var(--secondary);">DAHA İYİSİNİ YAPABİLİRSİN</div>
+            <div class="result-title" style="color: var(--secondary);">DENEME BİTTİ</div>
+            <div id="gov-sub" style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px;">Tekrar dene.</div>
             <div class="stats-grid">
-                <div class="glass-panel" style="padding: 12px;">
-                    <div class="hud-label">SKOR</div>
-                    <div class="hud-value" id="gov-score">0</div>
+                <div class="glass-panel" style="padding: 10px;">
+                    <div class="hud-lbl">SKOR</div>
+                    <div class="hud-val" id="gov-score">0</div>
                 </div>
-                <div class="glass-panel" style="padding: 12px;">
-                    <div class="hud-label">MAX COMBO</div>
-                    <div class="hud-value" id="gov-combo">0</div>
+                <div class="glass-panel" style="padding: 10px;">
+                    <div class="hud-lbl">EN YÜKSEK</div>
+                    <div class="hud-val" id="gov-best">0</div>
                 </div>
             </div>
-            <button class="btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="Game.restartLevel()">TEKRAR DENE ↺</button>
+            <button class="btn-primary" style="width: 100%; margin-bottom: 8px;" onclick="Game.retry()">TEKRAR DENE ↺</button>
             <button class="btn-secondary" style="width: 100%;" onclick="UI.showScreen('main-menu')">ANA MENÜ</button>
         </div>
-        <div style="height: 44px;"></div>
+        <div></div>
     </div>
 </div>
 
 <script>
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   1. SES SİSTEMİ (WEB AUDIO API)
+   1. SES SİSTEMİ
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const Sound = {
     ctx: null,
-    bgmOsc: null,
     bgmGain: null,
     init() {
         if (!this.ctx) {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            this.ctx = new AudioContext();
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioCtx();
         }
     },
-    playTone(freq, type, duration, vol = 0.3) {
+    playSoftTone(freq, duration = 0.12, gainLvl = 0.12) {
         if (!Storage.data.settings.sfx || !this.ctx) return;
         try {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
-            osc.type = type;
+            osc.type = "sine";
             osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-            gain.gain.setValueAtTime(vol, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+            gain.gain.setValueAtTime(gainLvl, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start();
             osc.stop(this.ctx.currentTime + duration);
         } catch(e) {}
     },
-    pass() { this.playTone(520, "sine", 0.15, 0.25); },
-    coin() {
-        this.playTone(987.77, "sine", 0.1, 0.2);
-        setTimeout(() => this.playTone(1318.51, "sine", 0.18, 0.2), 80);
-    },
-    combo() { this.playTone(784, "triangle", 0.25, 0.35); },
-    hit() { this.playTone(120, "sawtooth", 0.3, 0.4); },
+    pass() { this.playSoftTone(440, 0.1, 0.08); },
+    coin() { this.playSoftTone(880, 0.12, 0.1); },
+    combo() { this.playSoftTone(587.33, 0.16, 0.12); },
+    hit() { this.playSoftTone(150, 0.2, 0.15); },
+    btn() { this.playSoftTone(320, 0.04, 0.05); },
     victory() {
-        [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
-            setTimeout(() => this.playTone(f, "sine", 0.2, 0.3), i * 100);
+        [440, 554.37, 659.25].forEach((f, i) => {
+            setTimeout(() => this.playSoftTone(f, 0.18, 0.1), i * 120);
         });
     },
-    btn() { this.playTone(400, "sine", 0.05, 0.15); },
     startBGM() {
-        if (!Storage.data.settings.bgm || !this.ctx || this.bgmOsc) return;
+        if (!Storage.data.settings.bgm || !this.ctx || this.bgmGain) return;
         try {
-            this.bgmOsc = this.ctx.createOscillator();
+            const osc = this.ctx.createOscillator();
             this.bgmGain = this.ctx.createGain();
-            this.bgmOsc.type = "sine";
-            this.bgmOsc.frequency.setValueAtTime(65.41, this.ctx.currentTime); // C2 Derin Ambient
-            this.bgmGain.gain.setValueAtTime(0.04, this.ctx.currentTime);
-            this.bgmOsc.connect(this.bgmGain);
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(110, this.ctx.currentTime);
+            this.bgmGain.gain.setValueAtTime(0.015, this.ctx.currentTime);
+            osc.connect(this.bgmGain);
             this.bgmGain.connect(this.ctx.destination);
-            this.bgmOsc.start();
+            osc.start();
         } catch(e) {}
     },
     stopBGM() {
-        if (this.bgmOsc) {
-            try { this.bgmOsc.stop(); } catch(e) {}
-            this.bgmOsc = null;
+        if (this.bgmGain) {
+            try { this.bgmGain.disconnect(); } catch(e) {}
+            this.bgmGain = null;
         }
     }
 };
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   2. HAPTIC / TİTREŞİM MOTORU
+   2. HAPTIC (TİTREŞİM)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const Haptic = {
-    trigger(pattern) {
+    trigger(ms) {
         if (Storage.data.settings.vibration && "vibrate" in navigator) {
-            try { navigator.vibrate(pattern); } catch(e) {}
+            try { navigator.vibrate(ms); } catch(e) {}
         }
     },
-    light() { this.trigger(15); },
-    medium() { this.trigger(35); },
-    heavy() { this.trigger([50, 40, 60]); },
-    success() { this.trigger([20, 30, 40]); }
+    light() { this.trigger(12); },
+    medium() { this.trigger(25); },
+    heavy() { this.trigger(45); }
 };
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   3. VERİ KAYIT MOTORU (STORAGE)
+   3. VERİ DEPOLAMA VE AYARLAR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const Storage = {
-    key: "hoop_drop_master_save_v1",
+    key: "sferis_game_save_v3",
     data: {
-        coins: 100,
+        coins: 15,
         currentLevel: 1,
-        highScore: 0,
-        selectedSkin: "cyan",
-        unlockedSkins: ["cyan"],
+        maxUnlockedLevel: 1,
+        endlessHighScore: 0,
+        selectedBall: "cyan",
+        selectedTrail: "dots",
+        selectedTheme: "auto", // "auto" = Level'e bağlı dinamik arka plan
+        selectedBadge: "novice",
+        unlockedItems: ["cyan", "dots", "auto", "novice"],
         settings: { sfx: true, bgm: true, vibration: true },
         tasks: [
-            { id: 1, desc: "10 Halka Geç", target: 10, current: 0, reward: 50, done: false },
-            { id: 2, desc: "3x Combo Yakala", target: 3, current: 0, reward: 75, done: false },
-            { id: 3, desc: "Level Tamamla", target: 1, current: 0, reward: 100, done: false }
+            { id: 1, desc: "25 Halka Geç", target: 25, current: 0, reward: 8, done: false },
+            { id: 2, desc: "3 Kez 3x Combo Yap", target: 3, current: 0, reward: 12, done: false },
+            { id: 3, desc: "2 Seviye Tamamla", target: 2, current: 0, reward: 15, done: false }
         ]
     },
     load() {
@@ -768,67 +813,127 @@ const Storage = {
 };
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   4. SKIN VE MAĞAZA TANIMLARI
+   4. KOZMETİK MAĞAZASI TANIMLARI
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-const Skins = [
-    { id: "cyan", name: "Cyber Cyan", color: "#00f0ff", price: 0 },
-    { id: "ruby", name: "Ruby Core", color: "#ff0055", price: 150 },
-    { id: "amber", name: "Solar Flare", color: "#ffe600", price: 300 },
-    { id: "emerald", name: "Matrix Bio", color: "#00ff88", price: 500 },
-    { id: "amethyst", name: "Void Purple", color: "#b026ff", price: 800 }
-];
+const ShopItems = {
+    balls: [
+        { id: "cyan", name: "Sferis Mavi", color: "#00e5ff", price: 0, icon: "🔵" },
+        { id: "amber", name: "Güneş Çekirdeği", color: "#ffb703", price: 60, icon: "🟡" },
+        { id: "ruby", name: "Lal Kristali", color: "#ff3366", price: 120, icon: "🔴" },
+        { id: "emerald", name: "Zümrüt Yeşili", color: "#00f59b", price: 200, icon: "🟢" }
+    ],
+    trails: [
+        { id: "dots", name: "Hafif Noktalar", price: 0, icon: "••" },
+        { id: "glow", name: "Işık İzi", price: 80, icon: "✨" },
+        { id: "plasma", name: "Kozmik Toz", price: 150, icon: "☄️" }
+    ],
+    themes: [
+        { id: "auto", name: "Dinamik Seviye", price: 0, icon: "🔄", desc: "Level'e göre değişir" },
+        { id: "nebula", name: "Özel: Nebula", price: 100, icon: "🌌", bgTop: "#070913", bgBot: "#130826", ringHue: 280, pType: "stars" },
+        { id: "sunset", name: "Özel: Günbatımı", price: 180, icon: "🌇", bgTop: "#1c0b14", bgBot: "#38131d", ringHue: 340, pType: "ember" },
+        { id: "matrix", name: "Özel: Siber Ağ", price: 250, icon: "💻", bgTop: "#03140a", bgBot: "#082918", ringHue: 145, pType: "matrix" }
+    ],
+    badges: [
+        { id: "novice", name: "Kaşif", price: 0, icon: "🧭" },
+        { id: "steady", name: "Denge Ustası", price: 50, icon: "⚖️" },
+        { id: "master", name: "Halka Hakimi", price: 250, icon: "👑" }
+    ]
+};
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   5. PARÇACIK VE GÖRSEL EFEKT MOTORU
+   5. GERÇEK DİNAMİK SEVİYE & ARKA PLAN MOTORU
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-class ParticleEngine {
-    constructor() { this.particles = []; }
-    emit(x, y, color, count = 12, speed = 4) {
-        for (let i = 0; i < count; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const spd = (Math.random() * 0.7 + 0.3) * speed;
-            this.particles.push({
-                x, y,
-                vx: Math.cos(angle) * spd,
-                vy: Math.sin(angle) * spd,
-                radius: Math.random() * 3 + 2,
-                color,
-                alpha: 1,
-                decay: Math.random() * 0.03 + 0.02
-            });
+const LevelThemes = [
+    {
+        id: "theme_1_5",
+        name: "Açık Gökyüzü & Sakinlik",
+        minLevel: 1, maxLevel: 5,
+        bgTop: "#0b1528", bgBot: "#10233f",
+        ringHue: 195,
+        pType: "ambient_light",
+        bannerText: "BÖLGE 1: SAKİN BAŞLANGIÇ"
+    },
+    {
+        id: "theme_6_10",
+        name: "Gece & Derin Uzay",
+        minLevel: 6, maxLevel: 10,
+        bgTop: "#05060f", bgBot: "#0d0f24",
+        ringHue: 235,
+        pType: "stars",
+        bannerText: "BÖLGE 2: DERİN UZAY"
+    },
+    {
+        id: "theme_11_15",
+        name: "Volkanik Kor & Enerji",
+        minLevel: 11, maxLevel: 15,
+        bgTop: "#1a0808", bgBot: "#2d0f0f",
+        ringHue: 15,
+        pType: "ember",
+        bannerText: "BÖLGE 3: VOLKANİK ENERJİ"
+    },
+    {
+        id: "theme_16_20",
+        name: "Kutup & Buz Kristali",
+        minLevel: 16, maxLevel: 20,
+        bgTop: "#06131f", bgBot: "#0e2a3e",
+        ringHue: 180,
+        pType: "snow",
+        bannerText: "BÖLGE 4: BUZUL KRİSTALLERİ"
+    },
+    {
+        id: "theme_21_25",
+        name: "Kozmik Nebula & Mor Boşluk",
+        minLevel: 21, maxLevel: 25,
+        bgTop: "#140721", bgBot: "#270e3f",
+        ringHue: 290,
+        pType: "nebula",
+        bannerText: "BÖLGE 5: KOZMİK NEBULA"
+    },
+    {
+        id: "theme_26_plus",
+        name: "Sonsuz Işık & Ustalık",
+        minLevel: 26, maxLevel: 9999,
+        bgTop: "#171408", bgBot: "#332c12",
+        ringHue: 45,
+        pType: "matrix",
+        bannerText: "BÖLGE 6: USTALIK ÇEMBERİ"
+    }
+];
+
+function resolveActiveTheme(level, score, mode) {
+    // 1. Oyuncu Market'ten özel bir kozmetik tema seçtiyse:
+    if (Storage.data.selectedTheme && Storage.data.selectedTheme !== "auto") {
+        const custom = ShopItems.themes.find(t => t.id === Storage.data.selectedTheme);
+        if (custom) return custom;
+    }
+
+    // 2. Serbest Mod Arka Plan Çözümlemesi (Skor Bazlı İlerleme):
+    if (mode === "endless") {
+        if (score < 15) return LevelThemes[0];
+        if (score < 35) return LevelThemes[1];
+        if (score < 60) return LevelThemes[2];
+        if (score < 90) return LevelThemes[3];
+        if (score < 130) return LevelThemes[4];
+        return LevelThemes[5];
+    }
+
+    // 3. Levelli Mod: Gerçek Level Değerine Göre Çözümleme:
+    const targetLvl = level || 1;
+    for (let t of LevelThemes) {
+        if (targetLvl >= t.minLevel && targetLvl <= t.maxLevel) {
+            return t;
         }
     }
-    updateAndDraw(ctx) {
-        for (let i = this.particles.length - 1; i >= 0; i--) {
-            const p = this.particles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            p.alpha -= p.decay;
-            if (p.alpha <= 0) {
-                this.particles.splice(i, 1);
-                continue;
-            }
-            ctx.save();
-            ctx.globalAlpha = p.alpha;
-            ctx.fillStyle = p.color;
-            ctx.shadowColor = p.color;
-            ctx.shadowBlur = 8;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-    }
+    return LevelThemes[LevelThemes.length - 1];
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   6. OYUN NESNELERİ VE SEVİYE SİSTEMİ
+   6. GELİŞMİŞ ARKA PLAN VE PARÇACIK EFEKT MOTORU
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-const fx = new ParticleEngine();
-
 let W = window.innerWidth, H = window.innerHeight;
+
 function resize() {
     W = window.innerWidth;
     H = window.innerHeight;
@@ -838,13 +943,204 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
+const BackgroundEngine = {
+    currentTheme: null,
+    prevTheme: null,
+    transitionProgress: 1, // 0 -> 1 fade-in geçişi
+    particles: [],
+
+    init(theme) {
+        this.currentTheme = theme;
+        this.prevTheme = theme;
+        this.transitionProgress = 1;
+        this.reseedParticles(theme.pType);
+    },
+
+    setTheme(newTheme, showBanner = true) {
+        if (this.currentTheme && this.currentTheme.id === newTheme.id) return;
+        this.prevTheme = this.currentTheme || newTheme;
+        this.currentTheme = newTheme;
+        this.transitionProgress = 0; // Yumuşak geçişi başlat
+        this.reseedParticles(newTheme.pType);
+
+        if (showBanner && newTheme.bannerText && Game.active) {
+            UI.showThemeBanner(newTheme.bannerText);
+        }
+    },
+
+    reseedParticles(pType) {
+        this.particles = [];
+        const count = 35;
+        for (let i = 0; i < count; i++) {
+            this.particles.push(this.createParticle(pType));
+        }
+    },
+
+    createParticle(pType) {
+        return {
+            x: Math.random() * W,
+            y: Math.random() * H,
+            radius: Math.random() * 2.5 + 1,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: pType === "ember" ? -(Math.random() * 0.8 + 0.3) :
+                pType === "snow"  ?  (Math.random() * 0.6 + 0.2) :
+                                    -(Math.random() * 0.4 + 0.1),
+            alpha: Math.random() * 0.6 + 0.2,
+            pulse: Math.random() * Math.PI * 2,
+            pType: pType
+        };
+    },
+
+    updateAndDraw(ctx) {
+        if (!this.currentTheme) return;
+
+        // Geçiş Katsayısı İlerlemesi (0.5 - 0.8 sn civarı akıcı lerp)
+        if (this.transitionProgress < 1) {
+            this.transitionProgress += 0.025;
+            if (this.transitionProgress > 1) this.transitionProgress = 1;
+        }
+
+        // 1. Arka Plan Gradient Çizimi
+        const grad = ctx.createLinearGradient(0, 0, 0, H);
+        if (this.transitionProgress < 1 && this.prevTheme) {
+            // Önceki Arka Planı Çiz
+            grad.addColorStop(0, this.prevTheme.bgTop);
+            grad.addColorStop(1, this.prevTheme.bgBot);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, W, H);
+
+            // Yeni Arka Planı Üzerine Yumuşak Fade-in Yap
+            ctx.save();
+            ctx.globalAlpha = this.transitionProgress;
+            const newGrad = ctx.createLinearGradient(0, 0, 0, H);
+            newGrad.addColorStop(0, this.currentTheme.bgTop);
+            newGrad.addColorStop(1, this.currentTheme.bgBot);
+            ctx.fillStyle = newGrad;
+            ctx.fillRect(0, 0, W, H);
+            ctx.restore();
+        } else {
+            grad.addColorStop(0, this.currentTheme.bgTop);
+            grad.addColorStop(1, this.currentTheme.bgBot);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, W, H);
+        }
+
+        // 2. Temaya Özel Atmosferik Parçacıklar
+        ctx.save();
+        for (let p of this.particles) {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.pulse += 0.03;
+
+            // Ekran sınırlarından döngüsel sarma
+            if (p.y < 0) { p.y = H; p.x = Math.random() * W; }
+            if (p.y > H) { p.y = 0; p.x = Math.random() * W; }
+            if (p.x < 0) p.x = W;
+            if (p.x > W) p.x = 0;
+
+            const alpha = p.alpha * (0.8 + Math.sin(p.pulse) * 0.2);
+            ctx.globalAlpha = alpha;
+
+            if (p.pType === "ember") {
+                ctx.fillStyle = "#ff6b35";
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius * 1.2, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (p.pType === "snow") {
+                ctx.fillStyle = "#e0fbfc";
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (p.pType === "nebula") {
+                ctx.fillStyle = "#c77dff";
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius * 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (p.pType === "matrix") {
+                ctx.fillStyle = "#ffd166";
+                ctx.fillRect(p.x, p.y, p.radius * 1.5, p.radius * 1.5);
+            } else {
+                // stars & ambient
+                ctx.fillStyle = "#ffffff";
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        ctx.restore();
+    }
+};
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   7. FX (İz ve Çarpışma) MOTORU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+class ParticleEngine {
+    constructor() {
+        this.particles = [];
+        this.trailPoints = [];
+    }
+    emit(x, y, color, count = 8, speed = 2.5) {
+        for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const spd = (Math.random() * 0.7 + 0.3) * speed;
+            this.particles.push({
+                x, y,
+                vx: Math.cos(angle) * spd,
+                vy: Math.sin(angle) * spd,
+                radius: Math.random() * 2 + 1,
+                color,
+                alpha: 0.8,
+                decay: Math.random() * 0.03 + 0.02
+            });
+        }
+    }
+    addTrail(x, y, color) {
+        this.trailPoints.push({ x, y, color, alpha: 0.5 });
+    }
+    updateAndDraw(ctx) {
+        for (let i = this.trailPoints.length - 1; i >= 0; i--) {
+            const t = this.trailPoints[i];
+            t.alpha -= 0.03;
+            if (t.alpha <= 0) {
+                this.trailPoints.splice(i, 1);
+                continue;
+            }
+            ctx.fillStyle = t.color;
+            ctx.globalAlpha = t.alpha;
+            ctx.beginPath();
+            ctx.arc(t.x, t.y, 4 * t.alpha, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha -= p.decay;
+            if (p.alpha <= 0) {
+                this.particles.splice(i, 1);
+                continue;
+            }
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+    }
+}
+const fx = new ParticleEngine();
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   8. TOP VE HALKA MODELİ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const Ball = {
     x: W / 2,
     y: H * 0.22,
-    radius: 14,
+    radius: 13,
     vx: 0,
-    friction: 0.88,
-    maxSpeed: 16,
+    friction: 0.89,
+    maxSpeed: 15,
     reset() {
         this.x = W / 2;
         this.y = H * 0.22;
@@ -856,18 +1152,21 @@ const Ball = {
         if (Math.abs(this.vx) < 0.01) this.vx = 0;
         if (this.x - this.radius < 0) { this.x = this.radius; this.vx = 0; }
         if (this.x + this.radius > W) { this.x = W - this.radius; this.vx = 0; }
+
+        if (Game.active && Math.abs(this.vx) > 0.4) {
+            const ballSkin = ShopItems.balls.find(b => b.id === Storage.data.selectedBall) || ShopItems.balls[0];
+            fx.addTrail(this.x, this.y, ballSkin.color);
+        }
     },
     draw(ctx) {
-        const skin = Skins.find(s => s.id === Storage.data.selectedSkin) || Skins[0];
+        const ballSkin = ShopItems.balls.find(b => b.id === Storage.data.selectedBall) || ShopItems.balls[0];
         ctx.save();
-        ctx.fillStyle = skin.color;
-        ctx.shadowColor = skin.color;
-        ctx.shadowBlur = 18;
+        ctx.fillStyle = ballSkin.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
         ctx.beginPath();
         ctx.arc(this.x - 3, this.y - 3, this.radius * 0.35, 0, Math.PI * 2);
         ctx.fill();
@@ -876,52 +1175,45 @@ const Ball = {
 };
 
 class Ring {
-    constructor(speed, gapSize, moving = false) {
-        this.y = H + 40;
-        this.thickness = 22;
+    constructor(speed, gapSize, moving = false, hue = 195) {
+        this.y = H + 30;
+        this.thickness = 20;
         this.speed = speed;
         this.gapSize = gapSize;
         this.gapX = Math.random() * (W - this.gapSize - 40) + 20;
         this.passed = false;
-        this.color = `hsl(${(Game.score * 12 + Math.random() * 30) % 360}, 90%, 55%)`;
+        this.color = `hsl(${(hue + Math.random() * 20) % 360}, 80%, 55%)`;
         this.moving = moving;
         this.moveDir = Math.random() > 0.5 ? 1 : -1;
-        this.moveSpeed = 1.5;
-        this.hasCoin = Math.random() < 0.4;
+        this.moveSpeed = 1.3;
+        this.hasCoin = Math.random() < 0.25;
         this.coinCollected = false;
     }
     update() {
         this.y -= this.speed;
         if (this.moving) {
             this.gapX += this.moveSpeed * this.moveDir;
-            if (this.gapX <= 15 || this.gapX + this.gapSize >= W - 15) {
-                this.moveDir *= -1;
-            }
+            if (this.gapX <= 15 || this.gapX + this.gapSize >= W - 15) this.moveDir *= -1;
         }
     }
     draw(ctx) {
         ctx.save();
         ctx.fillStyle = this.color;
-        ctx.shadowColor = this.color;
-        ctx.shadowBlur = 14;
-
         ctx.fillRect(0, this.y, this.gapX, this.thickness);
         ctx.fillRect(this.gapX + this.gapSize, this.y, W - (this.gapX + this.gapSize), this.thickness);
 
-        ctx.fillStyle = "#fff";
+        ctx.fillStyle = "#ffffff";
         ctx.beginPath();
-        ctx.arc(this.gapX, this.y + this.thickness / 2, 5, 0, Math.PI * 2);
-        ctx.arc(this.gapX + this.gapSize, this.y + this.thickness / 2, 5, 0, Math.PI * 2);
+        ctx.arc(this.gapX, this.y + this.thickness / 2, 4, 0, Math.PI * 2);
+        ctx.arc(this.gapX + this.gapSize, this.y + this.thickness / 2, 4, 0, Math.PI * 2);
         ctx.fill();
 
         if (this.hasCoin && !this.coinCollected) {
             const cx = this.gapX + this.gapSize / 2;
             const cy = this.y + this.thickness / 2;
-            ctx.fillStyle = "#ffe600";
-            ctx.shadowColor = "#ffe600";
-            ctx.shadowBlur = 10;
+            ctx.fillStyle = "#ffb703";
             ctx.beginPath();
-            ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+            ctx.arc(cx, cy, 6, 0, Math.PI * 2);
             ctx.fill();
         }
         ctx.restore();
@@ -929,44 +1221,17 @@ class Ring {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   7. ARKA PLAN AMBİYANS YÖNETİCİSİ
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-const Background = {
-    stars: [],
-    init() {
-        this.stars = Array.from({ length: 35 }, () => ({
-            x: Math.random() * W,
-            y: Math.random() * H,
-            size: Math.random() * 2 + 1,
-            speed: Math.random() * 0.4 + 0.2,
-            alpha: Math.random() * 0.5 + 0.2
-        }));
-    },
-    draw(ctx) {
-        ctx.fillStyle = "#070913";
-        ctx.fillRect(0, 0, W, H);
-        for (let s of this.stars) {
-            s.y -= s.speed;
-            if (s.y < 0) { s.y = H; s.x = Math.random() * W; }
-            ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
-            ctx.fillRect(s.x, s.y, s.size, s.size);
-        }
-    }
-};
-Background.init();
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   8. ANA OYUN AKIŞI (GAME ENGINE)
+   9. OYUN YÖNETİMİ
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const Game = {
     active: false,
+    mode: "level",
+    level: 1,
     score: 0,
+    targetScore: 15,
     coinsEarned: 0,
     combo: 0,
-    maxCombo: 0,
     lives: 3,
-    level: 1,
-    targetScore: 10,
     rings: [],
     spawnTimer: 0,
 
@@ -975,16 +1240,20 @@ const Game = {
         Sound.btn();
         Sound.startBGM();
 
+        this.mode = "level";
         this.level = lvl;
         this.score = 0;
         this.coinsEarned = 0;
         this.combo = 0;
-        this.maxCombo = 0;
         this.lives = 3;
-        this.targetScore = 8 + lvl * 4;
+        this.targetScore = 15 + (lvl - 1) * 4;
         this.rings = [];
         this.spawnTimer = 0;
         this.active = true;
+
+        // Seviye temasına anında geç
+        const activeTheme = resolveActiveTheme(this.level, this.score, this.mode);
+        BackgroundEngine.setTheme(activeTheme, true);
 
         Ball.reset();
         UI.showHUD(true);
@@ -992,64 +1261,101 @@ const Game = {
         UI.showScreen(null);
     },
 
-    restartLevel() { this.startLevel(this.level); },
-    nextLevel() {
-        Storage.data.currentLevel++;
-        Storage.save();
-        this.startLevel(Storage.data.currentLevel);
+    startEndless() {
+        Sound.init();
+        Sound.btn();
+        Sound.startBGM();
+
+        this.mode = "endless";
+        this.score = 0;
+        this.coinsEarned = 0;
+        this.combo = 0;
+        this.lives = 3;
+        this.rings = [];
+        this.spawnTimer = 0;
+        this.active = true;
+
+        const activeTheme = resolveActiveTheme(1, 0, this.mode);
+        BackgroundEngine.setTheme(activeTheme, false);
+
+        Ball.reset();
+        UI.showHUD(true);
+        UI.updateHUD();
+        UI.showScreen(null);
     },
 
-    onRingPass(ring) {
+    retry() {
+        if (this.mode === "level") this.startLevel(this.level);
+        else this.startEndless();
+    },
+
+    nextLevel() {
+        const nextLvl = this.level + 1;
+        if (nextLvl > Storage.data.maxUnlockedLevel) {
+            Storage.data.maxUnlockedLevel = nextLvl;
+        }
+        Storage.data.currentLevel = nextLvl;
+        Storage.save();
+        this.startLevel(nextLvl);
+    },
+
+    onRingPass(r) {
         this.score++;
         this.combo++;
-        if (this.combo > this.maxCombo) this.maxCombo = this.combo;
-
         Sound.pass();
         Haptic.light();
-        fx.emit(Ball.x, Ball.y, "#00f0ff", 10);
+        fx.emit(Ball.x, Ball.y, "#00e5ff", 6);
 
-        if (this.combo >= 3) {
+        if (this.combo >= 2) {
             UI.showCombo(this.combo);
-            Sound.combo();
-            Haptic.medium();
+            if (this.combo % 3 === 0) {
+                Sound.combo();
+                Haptic.medium();
+                this.updateTask(2, 1);
+            }
         }
 
         this.updateTask(1, 1);
-        if (this.combo >= 3) this.updateTask(2, 1);
 
-        if (this.score >= this.targetScore) this.victory();
+        // Serbest Mod'da Skor Arttıkça Arka Planı Dinamik Güncelle
+        if (this.mode === "endless") {
+            const nextTheme = resolveActiveTheme(1, this.score, this.mode);
+            BackgroundEngine.setTheme(nextTheme, true);
+        }
+
+        if (this.mode === "level" && this.score >= this.targetScore) {
+            this.victory();
+        }
         UI.updateHUD();
     },
 
-    onCoinCollect(ring) {
-        ring.coinCollected = true;
-        this.coinsEarned += 5;
-        Storage.data.coins += 5;
+    onCoinCollect(r) {
+        r.coinCollected = true;
+        this.coinsEarned += 1;
+        Storage.data.coins += 1;
         Storage.save();
         Sound.coin();
         Haptic.light();
-        fx.emit(Ball.x, Ball.y, "#ffe600", 14);
+        fx.emit(Ball.x, Ball.y, "#ffb703", 10);
         UI.updateHUD();
     },
 
     onHit() {
         this.lives--;
         this.combo = 0;
+        UI.hideCombo();
         Sound.hit();
         Haptic.heavy();
-        fx.emit(Ball.x, Ball.y, "#ff0055", 25, 6);
+        fx.emit(Ball.x, Ball.y, "#ff3366", 16);
 
-        if (this.lives <= 0) {
-            this.gameOver();
-        } else {
-            UI.updateHUD();
-        }
+        if (this.lives <= 0) this.gameOver();
+        else UI.updateHUD();
     },
 
-    updateTask(id, amount) {
+    updateTask(id, amt) {
         const t = Storage.data.tasks.find(x => x.id === id);
         if (t && !t.done) {
-            t.current += amount;
+            t.current += amt;
             if (t.current >= t.target) {
                 t.done = true;
                 Storage.data.coins += t.reward;
@@ -1060,15 +1366,15 @@ const Game = {
 
     victory() {
         this.active = false;
-        const reward = 25 + this.level * 10;
+        const reward = 3 + Math.floor(this.level * 0.5);
         Storage.data.coins += reward;
-        if (this.score > Storage.data.highScore) Storage.data.highScore = this.score;
+        if (this.level >= Storage.data.maxUnlockedLevel) {
+            Storage.data.maxUnlockedLevel = this.level + 1;
+        }
         this.updateTask(3, 1);
         Storage.save();
 
         Sound.victory();
-        Haptic.success();
-
         document.getElementById("vic-score").innerText = this.score;
         document.getElementById("vic-coins").innerText = reward + this.coinsEarned;
         UI.showHUD(false);
@@ -1077,22 +1383,25 @@ const Game = {
 
     gameOver() {
         this.active = false;
-        const isNewRecord = this.score > Storage.data.highScore;
-        if (isNewRecord) Storage.data.highScore = this.score;
+        let isRecord = false;
+        if (this.mode === "endless") {
+            if (this.score > Storage.data.endlessHighScore) {
+                Storage.data.endlessHighScore = this.score;
+                isRecord = true;
+            }
+        }
         Storage.save();
 
         document.getElementById("gov-score").innerText = this.score;
-        document.getElementById("gov-combo").innerText = this.maxCombo + "x";
-        document.getElementById("gov-record-tag").innerText = isNewRecord ? "🎉 YENİ REKOR!" : "ELENDİN";
-        document.getElementById("gov-record-tag").style.color = isNewRecord ? "var(--accent)" : "var(--secondary)";
-
+        document.getElementById("gov-best").innerText = this.mode === "endless" ? Storage.data.endlessHighScore : "-";
+        document.getElementById("gov-sub").innerText = isRecord ? "🎉 YENİ SERBEST REKORU!" : "Odaklan ve tekrar dene.";
         UI.showHUD(false);
         UI.showScreen("gameover-screen");
     }
 };
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   9. DOKUNMATİK ANALOG SÜRÜKLEME KONTROLÜ
+   10. DOKUNMATİK ANALOG SÜRÜKLEME KONTROLÜ
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 let lastTouchX = 0;
 let isDragging = false;
@@ -1124,22 +1433,24 @@ window.addEventListener("mousemove", onTouchMove);
 window.addEventListener("mouseup", onTouchEnd);
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   10. OYUN DÖNGÜSÜ (LOOP)
+   11. ANA DÖNGÜ (MAIN LOOP)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 function mainLoop() {
-    Background.draw(ctx);
+    BackgroundEngine.updateAndDraw(ctx);
 
     if (Game.active) {
         Ball.update();
 
-        const baseSpeed = 4.2 + Game.level * 0.25;
-        const gapSize = Math.max(W * 0.22, (W * 0.38) - (Game.level * 3));
-        const spawnInterval = Math.max(32, 60 - Game.level * 2);
+        const curTheme = BackgroundEngine.currentTheme || LevelThemes[0];
+        const diffFactor = Game.mode === "level" ? Game.level : Math.min(25, Math.floor(Game.score / 6) + 1);
+        const baseSpeed = 4.0 + diffFactor * 0.15;
+        const gapSize = Math.max(W * 0.21, (W * 0.36) - (diffFactor * 2.5));
+        const spawnInterval = Math.max(34, 62 - diffFactor * 1.5);
 
         Game.spawnTimer++;
         if (Game.spawnTimer >= spawnInterval) {
-            const isMovingRing = Game.level >= 3 && Math.random() < 0.4;
-            Game.rings.push(new Ring(baseSpeed, gapSize, isMovingRing));
+            const isMoving = diffFactor >= 3 && Math.random() < 0.38;
+            Game.rings.push(new Ring(baseSpeed, gapSize, isMoving, curTheme.ringHue));
             Game.spawnTimer = 0;
         }
 
@@ -1157,7 +1468,7 @@ function mainLoop() {
                     continue;
                 } else if (r.hasCoin && !r.coinCollected) {
                     const coinX = r.gapX + r.gapSize / 2;
-                    if (Math.abs(Ball.x - coinX) < 20) Game.onCoinCollect(r);
+                    if (Math.abs(Ball.x - coinX) < 18) Game.onCoinCollect(r);
                 }
             }
 
@@ -1177,8 +1488,10 @@ function mainLoop() {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   11. UI VE MENÜ YÖNETİMİ
+   12. UI VE MENÜ YÖNETİMİ
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+let currentShopTab = "balls";
+
 const UI = {
     showScreen(id) {
         Sound.btn();
@@ -1191,53 +1504,87 @@ const UI = {
     showHUD(visible) {
         document.getElementById("hud-layer").style.display = visible ? "block" : "none";
     },
+    showThemeBanner(text) {
+        const b = document.getElementById("theme-banner");
+        b.innerText = text;
+        b.classList.add("show");
+        setTimeout(() => b.classList.remove("show"), 2000);
+    },
     updateHUD() {
         document.getElementById("hud-score").innerText = Game.score;
-        document.getElementById("hud-level-title").innerText = `LEVEL ${Game.level}`;
+        document.getElementById("hud-mode-title").innerText = Game.mode === "level" ? `LEVEL ${Game.level}` : "SERBEST";
         document.getElementById("hud-coins").innerText = Storage.data.coins;
-        document.getElementById("hud-progress").style.width = `${Math.min(100, (Game.score / Game.targetScore) * 100)}%`;
         document.getElementById("hud-hearts").innerText = "❤️".repeat(Math.max(0, Game.lives));
+
+        const progressWrap = document.getElementById("hud-progress-wrap");
+        if (Game.mode === "level") {
+            progressWrap.style.display = "block";
+            document.getElementById("hud-progress").style.width = `${Math.min(100, (Game.score / Game.targetScore) * 100)}%`;
+        } else {
+            progressWrap.style.display = "none";
+        }
     },
     showCombo(combo) {
-        const popup = document.getElementById("combo-popup");
-        popup.innerText = `COMBO x${combo}! 🔥`;
-        popup.classList.add("active");
-        setTimeout(() => popup.classList.remove("active"), 700);
+        const tag = document.getElementById("hud-combo");
+        tag.innerText = `COMBO x${combo}`;
+        tag.classList.add("active");
+    },
+    hideCombo() {
+        document.getElementById("hud-combo").classList.remove("active");
     },
     updateMenuData() {
         document.getElementById("menu-coins").innerText = Storage.data.coins;
         document.getElementById("shop-coins").innerText = Storage.data.coins;
-        document.getElementById("menu-level").innerText = `Level ${Storage.data.currentLevel}`;
-        document.getElementById("menu-high-score").innerText = Storage.data.highScore;
+        document.getElementById("menu-endless-high").innerText = Storage.data.endlessHighScore;
+        document.getElementById("menu-level-indicator").innerText = Storage.data.maxUnlockedLevel;
+        this.renderLevelGrid();
         this.renderShop();
         this.renderTasks();
         Settings.syncToggles();
     },
+    renderLevelGrid() {
+        const c = document.getElementById("level-grid-container");
+        let html = "";
+        for (let i = 1; i <= 28; i++) {
+            const isCompleted = i < Storage.data.maxUnlockedLevel;
+            const isCurrent = i === Storage.data.maxUnlockedLevel;
+            const isLocked = i > Storage.data.maxUnlockedLevel;
+            const cls = isCompleted ? "completed" : (isCurrent ? "current" : "locked");
+            const icon = isLocked ? "🔒" : (isCompleted ? "✓" : i);
+            html += `<div class="level-node ${cls}" onclick="${!isLocked ? `Game.startLevel(${i})` : ''}">${icon}</div>`;
+        }
+        c.innerHTML = html;
+    },
     renderShop() {
-        const container = document.getElementById("skin-container");
-        container.innerHTML = Skins.map(s => {
-            const isUnlocked = Storage.data.unlockedSkins.includes(s.id);
-            const isSelected = Storage.data.selectedSkin === s.id;
+        const c = document.getElementById("shop-grid-container");
+        const items = ShopItems[currentShopTab] || [];
+        const selectedKey = currentShopTab === "balls" ? "selectedBall" :
+                            currentShopTab === "trails" ? "selectedTrail" :
+                            currentShopTab === "themes" ? "selectedTheme" : "selectedBadge";
+
+        c.innerHTML = items.map(item => {
+            const isUnlocked = Storage.data.unlockedItems.includes(item.id);
+            const isSelected = Storage.data[selectedKey] === item.id;
             return `
-                <div class="glass-panel skin-card ${isSelected ? 'selected' : ''}" onclick="Shop.select('${s.id}')">
-                    <div class="skin-preview-circle" style="background: ${s.color}; color: ${s.color};"></div>
-                    <div class="skin-name">${s.name}</div>
-                    <div class="skin-status" style="${isSelected ? 'color: var(--primary);' : ''}">
-                        ${isSelected ? 'SEÇİLDİ' : (isUnlocked ? 'KULLAN' : s.price + ' 🪙')}
+                <div class="shop-card ${isSelected ? 'selected' : ''}" onclick="Shop.selectItem('${currentShopTab}', '${item.id}')">
+                    <div class="shop-preview" style="${item.color ? `background:${item.color};` : ''}">${item.icon || ''}</div>
+                    <div class="shop-item-name">${item.name}</div>
+                    <div class="shop-item-status" style="${isSelected ? 'color:var(--primary);' : ''}">
+                        ${isSelected ? 'SEÇİLİ' : (isUnlocked ? 'KULLAN' : item.price + ' 🪙')}
                     </div>
                 </div>
             `;
         }).join("");
     },
     renderTasks() {
-        const container = document.getElementById("task-container");
-        container.innerHTML = Storage.data.tasks.map(t => `
-            <div class="glass-panel task-card">
-                <div class="task-info">
-                    <div class="task-desc">${t.desc}</div>
-                    <div class="task-progress-text">${t.done ? 'Tamamlandı' : `${t.current}/${t.target}`}</div>
+        const c = document.getElementById("task-container");
+        c.innerHTML = Storage.data.tasks.map(t => `
+            <div class="glass-panel list-row">
+                <div>
+                    <div style="font-size: 13px; font-weight: 700;">${t.desc}</div>
+                    <div style="font-size: 11px; color: var(--text-dim);">${t.done ? 'Tamamlandı' : `${t.current}/${t.target}`}</div>
                 </div>
-                <div class="currency-badge" style="font-size: 13px; padding: 4px 10px;">
+                <div class="currency-badge" style="font-size: 12px; padding: 4px 10px;">
                     ${t.done ? '✅' : `+${t.reward} 🪙`}
                 </div>
             </div>
@@ -1246,19 +1593,36 @@ const UI = {
 };
 
 const Shop = {
-    select(id) {
-        const skin = Skins.find(s => s.id === id);
-        if (!skin) return;
-        if (Storage.data.unlockedSkins.includes(id)) {
-            Storage.data.selectedSkin = id;
+    setTab(tab, el) {
+        currentShopTab = tab;
+        document.querySelectorAll(".shop-tab").forEach(t => t.classList.remove("active"));
+        el.classList.add("active");
+        UI.renderShop();
+    },
+    selectItem(category, id) {
+        const items = ShopItems[category];
+        const item = items.find(x => x.id === id);
+        if (!item) return;
+
+        const selectedKey = category === "balls" ? "selectedBall" :
+                            category === "trails" ? "selectedTrail" :
+                            category === "themes" ? "selectedTheme" : "selectedBadge";
+
+        if (Storage.data.unlockedItems.includes(id)) {
+            Storage.data[selectedKey] = id;
             Sound.btn();
             Haptic.light();
-        } else if (Storage.data.coins >= skin.price) {
-            Storage.data.coins -= skin.price;
-            Storage.data.unlockedSkins.push(id);
-            Storage.data.selectedSkin = id;
+            // Tema anında değişsin
+            const resolved = resolveActiveTheme(Storage.data.maxUnlockedLevel, 0, "level");
+            BackgroundEngine.setTheme(resolved, false);
+        } else if (Storage.data.coins >= item.price) {
+            Storage.data.coins -= item.price;
+            Storage.data.unlockedItems.push(id);
+            Storage.data[selectedKey] = id;
             Sound.coin();
-            Haptic.success();
+            Haptic.medium();
+            const resolved = resolveActiveTheme(Storage.data.maxUnlockedLevel, 0, "level");
+            BackgroundEngine.setTheme(resolved, false);
         }
         Storage.save();
         UI.updateMenuData();
@@ -1288,8 +1652,15 @@ const Settings = {
     }
 };
 
-// Başlatma
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   13. BAŞLATMA VE DOĞRULAMA (INITIALIZATION)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 Storage.load();
+
+// Başlangıçta kayıtlı en son level'e uygun temayı yükle
+const initialTheme = resolveActiveTheme(Storage.data.maxUnlockedLevel, 0, "level");
+BackgroundEngine.init(initialTheme);
+
 UI.updateMenuData();
 mainLoop();
 </script>
