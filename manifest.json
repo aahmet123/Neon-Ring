@@ -1,5 +1,6 @@
 {
     "background_color": "#000000",
+    "package_id": "com.neonring.oyun",
     "dir": "ltr",
     "display": "standalone",
     "name": "neonring",
