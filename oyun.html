@@ -791,7 +791,7 @@ const Storage = {
         endlessHighScore: 0,
         selectedBall: "cyan",
         selectedTrail: "dots",
-        selectedTheme: "auto", // "auto" = Level'e bağlı dinamik arka plan
+        selectedTheme: "auto",
         selectedBadge: "novice",
         unlockedItems: ["cyan", "dots", "auto", "novice"],
         settings: { sfx: true, bgm: true, vibration: true },
@@ -901,13 +901,10 @@ const LevelThemes = [
 ];
 
 function resolveActiveTheme(level, score, mode) {
-    // 1. Oyuncu Market'ten özel bir kozmetik tema seçtiyse:
     if (Storage.data.selectedTheme && Storage.data.selectedTheme !== "auto") {
         const custom = ShopItems.themes.find(t => t.id === Storage.data.selectedTheme);
         if (custom) return custom;
     }
-
-    // 2. Serbest Mod Arka Plan Çözümlemesi (Skor Bazlı İlerleme):
     if (mode === "endless") {
         if (score < 15) return LevelThemes[0];
         if (score < 35) return LevelThemes[1];
@@ -916,13 +913,9 @@ function resolveActiveTheme(level, score, mode) {
         if (score < 130) return LevelThemes[4];
         return LevelThemes[5];
     }
-
-    // 3. Levelli Mod: Gerçek Level Değerine Göre Çözümleme:
     const targetLvl = level || 1;
     for (let t of LevelThemes) {
-        if (targetLvl >= t.minLevel && targetLvl <= t.maxLevel) {
-            return t;
-        }
+        if (targetLvl >= t.minLevel && targetLvl <= t.maxLevel) return t;
     }
     return LevelThemes[LevelThemes.length - 1];
 }
@@ -946,7 +939,7 @@ resize();
 const BackgroundEngine = {
     currentTheme: null,
     prevTheme: null,
-    transitionProgress: 1, // 0 -> 1 fade-in geçişi
+    transitionProgress: 1,
     particles: [],
 
     init(theme) {
@@ -960,7 +953,7 @@ const BackgroundEngine = {
         if (this.currentTheme && this.currentTheme.id === newTheme.id) return;
         this.prevTheme = this.currentTheme || newTheme;
         this.currentTheme = newTheme;
-        this.transitionProgress = 0; // Yumuşak geçişi başlat
+        this.transitionProgress = 0;
         this.reseedParticles(newTheme.pType);
 
         if (showBanner && newTheme.bannerText && Game.active) {
@@ -994,22 +987,18 @@ const BackgroundEngine = {
     updateAndDraw(ctx) {
         if (!this.currentTheme) return;
 
-        // Geçiş Katsayısı İlerlemesi (0.5 - 0.8 sn civarı akıcı lerp)
         if (this.transitionProgress < 1) {
             this.transitionProgress += 0.025;
             if (this.transitionProgress > 1) this.transitionProgress = 1;
         }
 
-        // 1. Arka Plan Gradient Çizimi
         const grad = ctx.createLinearGradient(0, 0, 0, H);
         if (this.transitionProgress < 1 && this.prevTheme) {
-            // Önceki Arka Planı Çiz
             grad.addColorStop(0, this.prevTheme.bgTop);
             grad.addColorStop(1, this.prevTheme.bgBot);
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, W, H);
 
-            // Yeni Arka Planı Üzerine Yumuşak Fade-in Yap
             ctx.save();
             ctx.globalAlpha = this.transitionProgress;
             const newGrad = ctx.createLinearGradient(0, 0, 0, H);
@@ -1025,14 +1014,12 @@ const BackgroundEngine = {
             ctx.fillRect(0, 0, W, H);
         }
 
-        // 2. Temaya Özel Atmosferik Parçacıklar
         ctx.save();
         for (let p of this.particles) {
             p.x += p.vx;
             p.y += p.vy;
             p.pulse += 0.03;
 
-            // Ekran sınırlarından döngüsel sarma
             if (p.y < 0) { p.y = H; p.x = Math.random() * W; }
             if (p.y > H) { p.y = 0; p.x = Math.random() * W; }
             if (p.x < 0) p.x = W;
@@ -1060,7 +1047,6 @@ const BackgroundEngine = {
                 ctx.fillStyle = "#ffd166";
                 ctx.fillRect(p.x, p.y, p.radius * 1.5, p.radius * 1.5);
             } else {
-                // stars & ambient
                 ctx.fillStyle = "#ffffff";
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
@@ -1251,7 +1237,6 @@ const Game = {
         this.spawnTimer = 0;
         this.active = true;
 
-        // Seviye temasına anında geç
         const activeTheme = resolveActiveTheme(this.level, this.score, this.mode);
         BackgroundEngine.setTheme(activeTheme, true);
 
@@ -1317,7 +1302,6 @@ const Game = {
 
         this.updateTask(1, 1);
 
-        // Serbest Mod'da Skor Arttıkça Arka Planı Dinamik Güncelle
         if (this.mode === "endless") {
             const nextTheme = resolveActiveTheme(1, this.score, this.mode);
             BackgroundEngine.setTheme(nextTheme, true);
@@ -1612,7 +1596,6 @@ const Shop = {
             Storage.data[selectedKey] = id;
             Sound.btn();
             Haptic.light();
-            // Tema anında değişsin
             const resolved = resolveActiveTheme(Storage.data.maxUnlockedLevel, 0, "level");
             BackgroundEngine.setTheme(resolved, false);
         } else if (Storage.data.coins >= item.price) {
@@ -1657,7 +1640,6 @@ const Settings = {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 Storage.load();
 
-// Başlangıçta kayıtlı en son level'e uygun temayı yükle
 const initialTheme = resolveActiveTheme(Storage.data.maxUnlockedLevel, 0, "level");
 BackgroundEngine.init(initialTheme);
 
